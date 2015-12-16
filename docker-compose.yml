@@ -36,6 +36,6 @@ tp:
     - global.clustering.type=toxi
   environment:
     - tp_config=m1:27017,m2:27018,m3:27019
-    - m1_latency=200,15
-    - m2_latency=200,15
-    - m3_latency=200,15
+    - m1_latency=100,15
+    - m2_latency=100,15
+    - m3_latency=100,15
