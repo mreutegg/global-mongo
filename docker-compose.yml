@@ -1,0 +1,41 @@
+m1:
+  image: mongo
+  command: mongod --replSet "rs0" --port 27017
+  hostname: mongo1
+  labels:
+    - global.clustering.type=mongo
+  environment:
+    - host_config=m2:mongo2,tp:mongo3
+
+m2:
+  image: mongo
+  command: mongod --replSet "rs0" --port 27018
+  hostname: mongo2
+  labels:
+    - global.clustering.type=mongo
+  environment:
+    - host_config=m1:mongo1,tp:mongo3
+
+m3:
+  image: mongo
+  command: mongod --replSet "rs0" --port 27019
+  hostname: mongo3
+  ports:
+    - "27019:27019"
+  labels:
+    - global.clustering.type=mongo
+  environment:
+    - host_config=tp:mongo1,tp:mongo2
+
+tp:
+  image: shopify/toxiproxy
+  ports:
+    - "27017:27017"
+    - "27018:27018"
+  labels:
+    - global.clustering.type=toxi
+  environment:
+    - tp_config=m1:27017,m2:27018,m3:27019
+    - m1_latency=200,15
+    - m2_latency=200,15
+    - m3_latency=200,15
