@@ -4,6 +4,7 @@ m1:
   hostname: mongo1
   labels:
     - global.clustering.type=mongo
+    - global.clustering.type=mongo-primary
   environment:
     - host_config=m2:mongo2,tp:mongo3
 
@@ -30,12 +31,10 @@ m3:
 tp:
   image: shopify/toxiproxy
   ports:
+    - "8474:8474"
     - "27017:27017"
     - "27018:27018"
   labels:
     - global.clustering.type=toxi
   environment:
     - tp_config=m1:27017,m2:27018,m3:27019
-    - m1_latency=100,15
-    - m2_latency=100,15
-    - m3_latency=100,15
