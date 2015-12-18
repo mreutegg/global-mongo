@@ -45,3 +45,7 @@ The whole deployment can be stopped and removed with following command:
 
     ./kill.sh
 
+## TODO
+
+* Add [fakes3](https://github.com/jubos/fake-s3) support to simulate datastore
+  latency
