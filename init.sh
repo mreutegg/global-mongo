@@ -17,7 +17,7 @@ do
   docker exec $id /tmp/create_proxy.sh
 done
 
-docker ps --filter 'label=global.clustering.type=mongo-primary' -q | while read id 
+docker ps --filter 'label=global.clustering.mongo=primary' -q | while read id 
 do
   echo "Initiating replica set on $id"
   docker cp scripts/replica_set.js $id:/tmp
