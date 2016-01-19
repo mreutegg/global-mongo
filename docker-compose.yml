@@ -7,6 +7,7 @@ m1:
     - global.clustering.mongo=primary
   environment:
     - host_config=m2:mongo2,tp:mongo3
+  restart: on-failure
 
 m2:
   image: mongo
@@ -17,6 +18,7 @@ m2:
     - global.clustering.mongo=secondary
   environment:
     - host_config=m1:mongo1,tp:mongo3
+  restart: on-failure
 
 m3:
   image: mongo
@@ -29,6 +31,7 @@ m3:
     - global.clustering.mongo=secondary
   environment:
     - host_config=tp:mongo1,tp:mongo2
+  restart: on-failure
 
 tp:
   image: shopify/toxiproxy
@@ -40,3 +43,4 @@ tp:
     - global.clustering.type=toxi
   environment:
     - tp_config=m1:27017,m2:27018,m3:27019
+  restart: on-failure
