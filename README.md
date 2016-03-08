@@ -28,13 +28,13 @@ One may connect to the Mongo using the ports above and the hostname of the
 `docker-machine`. If the docker runs without the `docker-machine` localhost
 will work as well.
 
-    mongo $(docker-machine ip $DOCKER_MACHINE_NAME):27017
+    mongo $(docker-machine ip):27017
 
 ## Setting latency
 
 The latency and jitter can be set using another script:
 
-    ./configure.sh 200 10
+    ./set_latency.sh 200 10
 
 Both values are passed in milliseconds. Invoking the script without any parameters
 will disable the latency.

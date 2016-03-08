@@ -9,6 +9,8 @@ services:
       dc1:
         aliases:
           - mongo1
+    labels:
+      - 'global.clustering.type=mongo'
 
   m2:
     image: mongo
@@ -18,15 +20,21 @@ services:
       dc1:
         aliases:
           - mongo2
+    labels:
+      - 'global.clustering.type=mongo'
 
   m3:
     image: mongo
+    ports:
+      - "27019:27019"
     command: mongod --replSet "rs0" --port 27019
     restart: on-failure
     networks:
       dc2:
         aliases:
           - mongo3
+    labels:
+      - 'global.clustering.type=mongo'
 
   tp:
     image: shopify/toxiproxy
@@ -34,11 +42,6 @@ services:
       - "8474:8474"
       - "27017:27017"
       - "27018:27018"
-      - "27019:27019"
-    labels:
-      - global.clustering.type=toxi
-    environment:
-      - tp_config=m1:27017,m2:27018,m3:27019
     restart: on-failure
     networks:
       dc1:
@@ -48,7 +51,23 @@ services:
         aliases:
           - mongo1
           - mongo2
+      priv:
+        aliases:
+          - tp
+
+  init:
+    build: ./init
+    environment:
+      - tp_config=m1:27017,m2:27018,m3:27019
+    networks:
+      - priv
+    depends_on:
+      - m1
+      - m2
+      - m3
+      - tp
 
 networks:
   dc1:
   dc2:
+  priv:
