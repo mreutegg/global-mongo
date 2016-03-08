@@ -1,46 +1,54 @@
-m1:
-  image: mongo
-  command: mongod --replSet "rs0" --port 27017
-  hostname: mongo1
-  labels:
-    - global.clustering.type=mongo
-    - global.clustering.mongo=primary
-  environment:
-    - host_config=m2:mongo2,tp:mongo3
-  restart: on-failure
+version: "2"
 
-m2:
-  image: mongo
-  command: mongod --replSet "rs0" --port 27018
-  hostname: mongo2
-  labels:
-    - global.clustering.type=mongo
-    - global.clustering.mongo=secondary
-  environment:
-    - host_config=m1:mongo1,tp:mongo3
-  restart: on-failure
+services:
+  m1:
+    image: mongo
+    command: mongod --replSet "rs0" --port 27017
+    restart: on-failure
+    networks:
+      dc1:
+        aliases:
+          - mongo1
 
-m3:
-  image: mongo
-  command: mongod --replSet "rs0" --port 27019
-  hostname: mongo3
-  ports:
-    - "27019:27019"
-  labels:
-    - global.clustering.type=mongo
-    - global.clustering.mongo=secondary
-  environment:
-    - host_config=tp:mongo1,tp:mongo2
-  restart: on-failure
+  m2:
+    image: mongo
+    command: mongod --replSet "rs0" --port 27018
+    restart: on-failure
+    networks:
+      dc1:
+        aliases:
+          - mongo2
 
-tp:
-  image: shopify/toxiproxy
-  ports:
-    - "8474:8474"
-    - "27017:27017"
-    - "27018:27018"
-  labels:
-    - global.clustering.type=toxi
-  environment:
-    - tp_config=m1:27017,m2:27018,m3:27019
-  restart: on-failure
+  m3:
+    image: mongo
+    command: mongod --replSet "rs0" --port 27019
+    restart: on-failure
+    networks:
+      dc2:
+        aliases:
+          - mongo3
+
+  tp:
+    image: shopify/toxiproxy
+    ports:
+      - "8474:8474"
+      - "27017:27017"
+      - "27018:27018"
+      - "27019:27019"
+    labels:
+      - global.clustering.type=toxi
+    environment:
+      - tp_config=m1:27017,m2:27018,m3:27019
+    restart: on-failure
+    networks:
+      dc1:
+        aliases:
+          - mongo3
+      dc2:
+        aliases:
+          - mongo1
+          - mongo2
+
+networks:
+  dc1:
+  dc2:
