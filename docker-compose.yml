@@ -37,7 +37,7 @@ services:
       - 'global.clustering.type=mongo'
 
   tp:
-    image: shopify/toxiproxy
+    image: shopify/toxiproxy:1.2.1
     ports:
       - "8474:8474"
       - "27017:27017"
