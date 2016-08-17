@@ -11,7 +11,8 @@ for i in "${PROXIES[@]}"; do
   curl -s -i -d '{"name": "'${proxy_name}'", "upstream": "'"${host}:${port}"'", "listen": "0.0.0.0:'${port}'"}' "tp:8474/proxies"
 done
 
-if [ -e /replica_set.js]; then
+# run just once
+if [ -e /replica_set.js ]; then
   mongo tp:27017 /replica_set.js
   rm /replica_set.js
 fi

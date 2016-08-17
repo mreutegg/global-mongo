@@ -1,7 +1,9 @@
-FROM alpine
+FROM mongo
+
+RUN apt-get update
+RUN apt-get -y --no-install-recommends install curl
 
 COPY ./init.sh /docker-entrypoint.sh
-
-RUN apk add --update curl bash && rm -rf /var/cache/apk/*
+COPY replica_set.js /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
