@@ -11,6 +11,9 @@ services:
           - mongo1
     labels:
       - 'global.clustering.type=mongo'
+    volumes:
+      - m1-data:/data/db
+      - m1-conf:/data/configdb
 
   m2:
     image: mongo
@@ -22,6 +25,9 @@ services:
           - mongo2
     labels:
       - 'global.clustering.type=mongo'
+    volumes:
+      - m2-data:/data/db
+      - m2-conf:/data/configdb
 
   m3:
     image: mongo
@@ -35,6 +41,9 @@ services:
           - mongo3
     labels:
       - 'global.clustering.type=mongo'
+    volumes:
+      - m3-data:/data/db
+      - m3-conf:/data/configdb
 
   tp:
     image: shopify/toxiproxy:1.2.1
@@ -71,3 +80,11 @@ networks:
   dc1:
   dc2:
   priv:
+
+volumes:
+  m1-data:
+  m1-conf:
+  m2-data:
+  m2-conf:
+  m3-data:
+  m3-conf:
