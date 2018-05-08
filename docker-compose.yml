@@ -2,8 +2,8 @@ version: "2"
 
 services:
   m1:
-    image: mongo:3.2
-    command: mongod --replSet "rs0" --port 27017 --enableMajorityReadConcern
+    image: mongo:3.6
+    command: mongod --replSet "rs0" --port 27017
     restart: on-failure
     networks:
       dc1:
@@ -16,8 +16,8 @@ services:
       - ./data/m1-conf:/data/configdb
 
   m2:
-    image: mongo:3.2
-    command: mongod --replSet "rs0" --port 27018 --enableMajorityReadConcern
+    image: mongo:3.6
+    command: mongod --replSet "rs0" --port 27018
     restart: on-failure
     networks:
       dc1:
@@ -30,10 +30,10 @@ services:
       - ./data/m2-conf:/data/configdb
 
   m3:
-    image: mongo:3.2
+    image: mongo:3.6
     ports:
       - "27019:27019"
-    command: mongod --replSet "rs0" --port 27019 --enableMajorityReadConcern
+    command: mongod --replSet "rs0" --port 27019
     restart: on-failure
     networks:
       dc2:
