@@ -4,7 +4,7 @@ LATENCY=$1
 JITTER=${2:-0}
 MACHINE_IP=$(docker-machine ip 2>/dev/null || echo "127.0.0.1")
 
-for proxy_name in $(curl -s $IP:8474/proxies | jq -r 'keys[]')
+for proxy_name in $(curl -s $MACHINE_IP:8474/proxies | jq -r 'keys[]')
 do
   if [ -n "$LATENCY" ]; then
     echo "Set latency ${LATENCY} with jitter ${JITTER} on ${proxy_name}"
